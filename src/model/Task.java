@@ -3,10 +3,10 @@ package model;
 import java.util.Objects;
 
 public class Task {
-    public String name;
-    public String description;
-    public Status status;
-    public int id;
+    private String name;
+    private String description;
+    private Status status;
+    private int id;
 
     public Task() {
     }

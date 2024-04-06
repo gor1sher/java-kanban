@@ -10,6 +10,8 @@ public class Main {
         Manager manager = new Manager();
         manager.createTask(new Task("asd", "asd", Status.NEW));
         manager.getListAllTask();
+        Epic epic2 = new Epic("qwe", "qwe");
+        manager.updateStatusEpic(epic2);
 
         Epic epic = new Epic("аза", "гусейнов", Status.IN_PROGRESS);
         manager.createEpic(epic);
@@ -25,7 +27,8 @@ public class Main {
 
         manager.createSubtask(new Subtask("gor", "gors", Status.IN_PROGRESS, epic1));
         manager.createSubtask(new Subtask("gor1", "gors1", Status.IN_PROGRESS, epic1));
-        manager.getListAllSubtaskForEpic(epic1);
+        manager.getSubtasksByEpic(epic1);
         manager.getListAllSubtask();
+
     }
 }
