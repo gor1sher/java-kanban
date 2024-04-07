@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Manager {
-    static int id = 0;
+    private static int id = 0;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Subtask> subtasks;
