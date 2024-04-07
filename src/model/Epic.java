@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private List<Subtask> subtasks;
+    private List<Integer> subtasks;
 
     public Epic(String name, String description, Status status) {
         super(name, description, status);
@@ -16,25 +16,19 @@ public class Epic extends Task {
         this.setDescription(description);
     }
 
-    public ArrayList<Subtask> getSubtasks() {
-        return (ArrayList<Subtask>) subtasks;
+    public ArrayList<Integer> getSubtasks() {
+        return (ArrayList<Integer>) subtasks;
     }
 
-    public void setSubtasks(List<Subtask> subtasks) {
+    public void setSubtasks(List<Integer> subtasks) {
         this.subtasks = subtasks;
     }
 
-    public void addSubtack(Subtask subtask){
+    public void addSubtack(Integer subtask){
         subtasks.add(subtask);
     }
 
-    public void removeSubtask(Subtask subtask){
+    public void removeSubtask(Integer subtask){
         subtasks.remove(subtask);
     }
-
-    public void updateSubTask(Subtask newSubTask) {
-        Subtask subtask = subtasks.get(newSubTask.getId());
-        subtasks.set(subtask.getId(), newSubTask);
-    }
-
 }
