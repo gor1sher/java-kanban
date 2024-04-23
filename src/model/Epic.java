@@ -24,8 +24,14 @@ public class Epic extends Task {
         this.subtasks = subtasks;
     }
 
-    public void addSubtack(Integer subtask){
-        subtasks.add(subtask);
+    public void addSubtack(Integer subtask, Integer epic){
+        if (subtask != null) {
+            if(subtask.equals(epic)) {
+                subtasks.add(subtask);
+            }
+        } else {
+            return;
+        }
     }
 
     public void removeSubtask(Integer subtask){
