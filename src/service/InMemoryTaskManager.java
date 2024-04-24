@@ -14,19 +14,22 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Subtask> subtasks;
-    InMemoryHistoryManager historyList = new InMemoryHistoryManager();
+    private final ArrayList<Task> history;
+    private InMemoryHistoryManager historyList = new InMemoryHistoryManager();
 
     public InMemoryTaskManager(InMemoryHistoryManager inMemoryHistoryManager) {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
+        history = new ArrayList<>();
     }
 
 
-    public int generateId(){
+    private int generateId(){
         return id++;
     }
 
+    @Override
     public Task createTask(Task task){
         task.setId(generateId());
         tasks.put(task.getId(), task);
@@ -79,19 +82,49 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id){
-        historyList.add(tasks.get(id));
+        if (history.size() <= 10) {
+            historyList.add(tasks.get(id));
+            history.add(tasks.get(id));
+        } else {
+            while (history.size() > 10){
+                history.remove(0);
+                historyList.remove(0);
+            }
+            historyList.add(tasks.get(id));
+            history.add(tasks.get(id));
+        }
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id){
-        historyList.add(epics.get(id));
+        if (history.size() <= 10) {
+            historyList.add(epics.get(id));
+            history.add(epics.get(id));
+        } else {
+            while (history.size() > 10){
+                history.remove(0);
+                historyList.remove(0);
+            }
+            historyList.add(epics.get(id));
+            history.add(epics.get(id));
+        }
         return epics.get(id);
     }
 
     @Override
     public Subtask getSubtaskById(int id){
-        historyList.add(subtasks.get(id));
+        if (history.size() <= 10) {
+            historyList.add(subtasks.get(id));
+            history.add(subtasks.get(id));
+        } else {
+            while (history.size() > 10){
+                history.remove(0);
+                historyList.remove(0);
+            }
+            historyList.add(subtasks.get(id));
+            history.add(subtasks.get(id));
+        }
         return subtasks.get(id);
     }
 
@@ -163,5 +196,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.NEW);
         }
+
     }
 }

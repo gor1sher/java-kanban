@@ -26,7 +26,7 @@ public class Epic extends Task {
 
     public void addSubtack(Integer subtask, Integer epic){
         if (subtask != null) {
-            if(subtask.equals(epic)) {
+            if(!subtask.equals(epic) && !subtask.equals(subtask)) {
                 subtasks.add(subtask);
             }
         } else {
