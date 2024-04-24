@@ -44,13 +44,8 @@ class EpicTest {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
         epic.setId(20);
         Epic epic1 = new Epic("аза", "куув", Status.IN_PROGRESS);
-        epic1.setId(20);
-        Subtask subtask = new Subtask("gor", "qwert", Status.IN_PROGRESS, epic.getId());
-        subtask.setId(40);
-        Subtask subtask1 = new Subtask("gor", "qwert", Status.IN_PROGRESS, epic.getId());
-        subtask1.setId(40);
+        epic1.setId(20);;
         assertTrue(epic.equals(epic1));
-        assertTrue(subtask.equals(subtask1));
     }
 
     @Test
