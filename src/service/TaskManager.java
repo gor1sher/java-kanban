@@ -1,20 +1,16 @@
 package service;
 
 import model.Epic;
-import model.Status;
 import model.Subtask;
 import model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
- interface Manager {
+interface TaskManager {
 
+    public Task createTask(Task task);
 
-     public int generateId();
-
-     public Task createTask(Task task);
-
-     public Epic createEpic(Epic epic);
+    public Epic createEpic(Epic epic);
 
     public Subtask createSubtask(Subtask subtask);
 

@@ -2,12 +2,14 @@ import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
+import service.InMemoryHistoryManager;
 import service.InMemoryTaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        InMemoryHistoryManager inMemoryTaskManager = new InMemoryHistoryManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager(inMemoryTaskManager);
         manager.createTask(new Task("asd", "asd", Status.NEW));
         manager.getListAllTask();
 
@@ -28,7 +30,5 @@ public class Main {
         manager.createSubtask(new Subtask("gor1", "gors1", Status.IN_PROGRESS, epic1.getId()));
         manager.getSubtasksByEpic(epic1);
         manager.getListAllSubtask();
-        manager.getHistory();
-
     }
 }
