@@ -8,13 +8,14 @@ import service.InMemoryTaskManager;
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryHistoryManager inMemoryTaskManager = new InMemoryHistoryManager();
-        InMemoryTaskManager manager = new InMemoryTaskManager(inMemoryTaskManager);
+        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager(inMemoryHistoryManager);
         manager.createTask(new Task("asd", "asd", Status.NEW));
         manager.getListAllTask();
 
 
         Epic epic = new Epic("аза", "гусейнов", Status.IN_PROGRESS);
+        epic.setId(24);
         manager.createEpic(epic);
         manager.getListAllEpic();
 
@@ -23,6 +24,7 @@ public class Main {
 
 
         Epic epic1 = new Epic("аза1", "гусейнов", Status.IN_PROGRESS);
+        epic1.setId(100);
         manager.createEpic(epic1);
         manager.getListAllEpic();
 
@@ -30,5 +32,7 @@ public class Main {
         manager.createSubtask(new Subtask("gor1", "gors1", Status.IN_PROGRESS, epic1.getId()));
         manager.getSubtasksByEpic(epic1);
         manager.getListAllSubtask();
+        manager.getEpicById(24);
+        manager.getEpicById(100);
     }
 }

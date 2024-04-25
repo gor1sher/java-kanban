@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import service.InMemoryHistoryManager;
 import service.InMemoryTaskManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
@@ -79,4 +77,4 @@ class EpicTest {
         subtask.setId(40);
         assertTrue(subtask.equals(inMemoryTaskManager.getSubtaskById(40)));
     }
-}
+} 
