@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SubtaskTest {
+
     @Test
     void setId_eachOtherIfTheirIdIsEqual_Task() {
         Task task = new Task("аза", "куув", Status.NEW);
