@@ -38,7 +38,6 @@ public class InMemoryTaskManager implements TaskManager {
         task.setId(generateId());
         tasks.put(task.getId(), task);
         return task;
-
     }
 
     @Override
@@ -173,3 +172,4 @@ public class InMemoryTaskManager implements TaskManager {
 
     }
 }
+
