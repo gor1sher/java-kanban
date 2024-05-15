@@ -1,7 +1,11 @@
 package service;
 
+import java.util.HashMap;
+
 public class Managers {
+    static InMemoryTaskManager inMemoryTaskManager;
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager(new InMemoryHistoryManager());
+        inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+        return inMemoryTaskManager;
     }
 }

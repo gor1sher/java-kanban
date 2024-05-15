@@ -27,6 +27,7 @@ public class Main {
         epic1.setId(100);
         manager.createEpic(epic1);
         manager.getListAllEpic();
+        System.out.println(manager.getListAllEpic());
 
         manager.createSubtask(new Subtask("gor", "gors", Status.IN_PROGRESS, epic1.getId()));
         manager.createSubtask(new Subtask("gor1", "gors1", Status.IN_PROGRESS, epic1.getId()));
@@ -34,5 +35,6 @@ public class Main {
         manager.getListAllSubtask();
         manager.getEpicById(24);
         manager.getEpicById(100);
+        System.out.println(inMemoryHistoryManager.getHistory());
     }
 }

@@ -13,7 +13,11 @@ public class Subtask extends Task{
     }
 
     public void setEpic(Integer epic) {
-        this.epic = epic;
+        if (epic != null) {
+            if(!epic.equals(super.getId())) {
+                this.epic = epic;
+            }
+        }
     }
 
 }

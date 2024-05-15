@@ -2,10 +2,14 @@ package service;
 
 import model.Task;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 public interface HistoryManager {
-    public void add(Task task);
+    void add(Integer id, Task task);
 
-    public ArrayList<Task> getHistory();
+    void remove(int id);
+
+    List<Task> getHistory();
 }
