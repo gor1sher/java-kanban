@@ -6,6 +6,7 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+
 interface TaskManager {
 
     public Task createTask(Task task);
@@ -35,7 +36,9 @@ interface TaskManager {
     public List<Task> getListAllTask();
 
     public List<Epic> getListAllEpic();
+
     public List<Subtask> getListAllSubtask();
+
     public ArrayList<Integer> getSubtasksByEpic(Epic specificEpic);
 
  }
