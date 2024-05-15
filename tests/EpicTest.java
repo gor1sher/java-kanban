@@ -8,13 +8,12 @@ import service.InMemoryTaskManager;
 import service.Managers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
+
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
+
     @Test
     void addSubtask_shouldNotAddYourself_Epic() {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
+
     private static int id = 0;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;

@@ -41,6 +41,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     public class Node {
+
         Task task;
         Node next;
         Node prev;
@@ -63,12 +64,15 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     class List {
+
         Node head;
         Node tail;
+
         List(){
             head = null;
             tail = null;
         }
+
         void add(Task task){
         Node newNode = new Node(task);
             if (head == null){
