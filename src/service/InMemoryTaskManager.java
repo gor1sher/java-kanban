@@ -29,12 +29,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-    private int generateId(){
+    private int generateId() {
         return id++;
     }
 
     @Override
-    public Task createTask(Task task){
+    public Task createTask(Task task) {
         task.setId(generateId());
         tasks.put(task.getId(), task);
         return task;
@@ -42,14 +42,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic createEpic(Epic epic){
+    public Epic createEpic(Epic epic) {
         epic.setId(generateId());
         epics.put(epic.getId(), epic);
         return epic;
     }
 
     @Override
-    public Subtask createSubtask(Subtask subtask){
+    public Subtask createSubtask(Subtask subtask) {
         subtask.setId(generateId());
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpic());
@@ -59,14 +59,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeTask(int id){
+    public void removeTask(int id) {
         tasks.remove(id);
     }
 
     @Override
-    public void removeEpic(int id){
+    public void removeEpic(int id) {
         Epic epic = epics.get(id);
-        for (Integer subtask : epic.getSubtasks()){
+        for (Integer subtask : epic.getSubtasks()) {
             epic.removeSubtask(subtask);
             subtasks.remove(subtask);
         }
@@ -74,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeSubtask(int id){
+    public void removeSubtask(int id) {
         Subtask subtask = subtasks.get(id);
         Integer epicId = subtask.getEpic();
         Epic epic = epics.get(epicId);
@@ -85,37 +85,37 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int id){
+    public Task getTaskById(int id) {
         historyList.add(id, tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
-    public Epic getEpicById(int id){
+    public Epic getEpicById(int id) {
         historyList.add(id, epics.get(id));
         return epics.get(id);
     }
 
     @Override
-    public Subtask getSubtaskById(int id){
+    public Subtask getSubtaskById(int id) {
         historyList.add(id, subtasks.get(id));
         return subtasks.get(id);
     }
 
     @Override
-    public void updateTask(Task newTask){
+    public void updateTask(Task newTask) {
         Task task = tasks.get(newTask.getId());
         tasks.put(task.getId(), newTask);
     }
 
     @Override
-    public void updateEpic(Epic newEpic){
+    public void updateEpic(Epic newEpic) {
         Epic epic = epics.get(newEpic.getId());
         epics.put(epic.getId(), newEpic);
     }
 
     @Override
-    public void updateSubtask(Subtask newSubtask){
+    public void updateSubtask(Subtask newSubtask) {
         Epic epic = epics.get(newSubtask.getEpic());
         Subtask subtask = subtasks.get(newSubtask.getId());
         subtasks.put(subtask.getId(), newSubtask);
@@ -133,21 +133,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Subtask> getListAllSubtask(){
+    public List<Subtask> getListAllSubtask() {
         return new ArrayList<>(subtasks.values());
     }
 
     @Override
-    public ArrayList<Integer> getSubtasksByEpic(Epic specificEpic){
+    public ArrayList<Integer> getSubtasksByEpic(Epic specificEpic) {
         Epic epic = epics.get(specificEpic.getId());
         return epic.getSubtasks();
     }
 
-    private void updateStatusForEpic(Epic epic){
+    private void updateStatusForEpic(Epic epic) {
         ArrayList<Integer> subtasksList = epic.getSubtasks();
         int countDone = 0;
         int countNew = 0;
-        if(epic.getSubtasks() != null) {
+        if (epic.getSubtasks() != null) {
             for (Integer subtaskId : subtasksList) {
                 Subtask subtask = subtasks.get(subtaskId);
                 if (subtask.getStatus() == Status.IN_PROGRESS) {

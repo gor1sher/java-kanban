@@ -8,6 +8,7 @@ import service.InMemoryTaskManager;
 import service.Managers;
 
 import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
@@ -23,7 +24,7 @@ class EpicTest {
     }
 
     @Test
-    void addSubtask_shouldNotAddYourself_Subtask(){
+    void addSubtask_shouldNotAddYourself_Subtask() {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
         inMemoryTaskManager.createEpic(epic);
         Subtask subtask = new Subtask("gor", "qwert", Status.IN_PROGRESS, epic.getId());
@@ -33,7 +34,7 @@ class EpicTest {
     }
 
     @Test
-    void setId_eachOtherIfTheirIdIsEqual_Task(){
+    void setId_eachOtherIfTheirIdIsEqual_Task() {
         Task task = new Task("аза", "куув", Status.NEW);
         task.setId(15);
         Task task1 = new Task("аза", "куув", Status.NEW);
@@ -42,23 +43,24 @@ class EpicTest {
     }
 
     @Test
-    void setId_eachOtherIfTheirIdIsEqual_Epic(){
+    void setId_eachOtherIfTheirIdIsEqual_Epic() {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
         epic.setId(20);
         Epic epic1 = new Epic("аза", "куув", Status.IN_PROGRESS);
-        epic1.setId(20);;
+        epic1.setId(20);
+        ;
         assertEquals(epic, epic1);
     }
 
     @Test
-    void getTaskById_mustBeEqualId(){
+    void getTaskById_mustBeEqualId() {
         Task task = new Task("аза", "куув", Status.NEW);
         task = inMemoryTaskManager.createTask(task);
         assertEquals(task, inMemoryTaskManager.getTaskById(task.getId()));
     }
 
     @Test
-    void getEpicById_mustBeEqualId(){
+    void getEpicById_mustBeEqualId() {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
         epic = inMemoryTaskManager.createEpic(epic);
         assertEquals(epic, inMemoryTaskManager.getEpicById(epic.getId()));
@@ -121,7 +123,7 @@ class EpicTest {
     }
 
     @Test
-    void getHistoryList_inMemoryHistoryManager(){
+    void getHistoryList_inMemoryHistoryManager() {
         Epic epic = new Epic("аза1", "куув", Status.IN_PROGRESS);
         epic = inMemoryTaskManager.createEpic(epic);
         Subtask subtask = new Subtask("gor1", "qwert", Status.IN_PROGRESS, epic.getId());

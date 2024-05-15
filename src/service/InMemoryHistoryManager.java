@@ -5,12 +5,12 @@ import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
 
     private HashMap<Integer, Node> historyMap;
     private List historyList;
 
-    public InMemoryHistoryManager(){
+    public InMemoryHistoryManager() {
         historyMap = new HashMap<>();
         historyList = new List();
     }
@@ -23,7 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
-    public void remove(int id){
+    public void remove(int id) {
         Node node = historyMap.get(id);
         historyList.remove(node);
         historyMap.remove(node);
@@ -33,7 +33,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     public ArrayList<Task> getHistory() {
         ArrayList<Task> tasks = new ArrayList<>();
         Node next = historyList.head;
-        while (next != null){
+        while (next != null) {
             tasks.add(next.getTask());
             next = next.next;
         }
@@ -68,14 +68,14 @@ public class InMemoryHistoryManager implements HistoryManager{
         Node head;
         Node tail;
 
-        List(){
+        List() {
             head = null;
             tail = null;
         }
 
-        void add(Task task){
-        Node newNode = new Node(task);
-            if (head == null){
+        void add(Task task) {
+            Node newNode = new Node(task);
+            if (head == null) {
                 head = newNode;
             } else {
                 tail.next = newNode;
@@ -84,11 +84,11 @@ public class InMemoryHistoryManager implements HistoryManager{
             tail = newNode;
         }
 
-        Node getNodeTail(){
+        Node getNodeTail() {
             return tail;
         }
 
-        Node getNodeHead(){
+        Node getNodeHead() {
             return head;
         }
 

@@ -1,6 +1,6 @@
 package model;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
     private Integer epic;
 
     public Subtask(String name, String description, Status status, Integer epic) {
@@ -14,7 +14,7 @@ public class Subtask extends Task{
 
     public void setEpic(Integer epic) {
         if (epic != null) {
-            if(!epic.equals(super.getId())) {
+            if (!epic.equals(super.getId())) {
                 this.epic = epic;
             }
         }
