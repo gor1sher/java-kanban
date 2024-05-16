@@ -4,37 +4,38 @@ import model.Subtask;
 import model.Task;
 import service.InMemoryHistoryManager;
 import service.InMemoryTaskManager;
+import service.Managers;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-        InMemoryTaskManager manager = new InMemoryTaskManager(inMemoryHistoryManager);
-        manager.createTask(new Task("asd", "asd", Status.NEW));
-        manager.getListAllTask();
+        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
+        Epic epic = new Epic("дом", "3 шага для постройки дома", Status.NEW);
+        inMemoryTaskManager.createEpic(epic);
+        Subtask subtask1 = new Subtask("посадить дерево", "березка", Status.IN_PROGRESS, epic.getId());
+        inMemoryTaskManager.createSubtask(subtask1);
+        Subtask subtask2 = new Subtask("выростить сына", "иван", Status.IN_PROGRESS, epic.getId());
+        inMemoryTaskManager.createSubtask(subtask2);
+        Subtask subtask3 = new Subtask("построить дом", "двухэтажный", Status.IN_PROGRESS, epic.getId());
+        inMemoryTaskManager.createSubtask(subtask3);
 
+        Epic epic1 = new Epic("машина", "купить машину", Status.NEW);
+        inMemoryTaskManager.createEpic(epic1);
 
-        Epic epic = new Epic("аза", "гусейнов", Status.IN_PROGRESS);
-        epic.setId(24);
-        manager.createEpic(epic);
-        manager.getListAllEpic();
+        inMemoryTaskManager.getSubtaskById(subtask1.getId());
+        System.out.println(inMemoryTaskManager.getHistoryList());
 
-        manager.createSubtask(new Subtask("gor", "gors", Status.IN_PROGRESS, epic.getId()));
-        manager.createSubtask(new Subtask("gor1", "gors1", Status.IN_PROGRESS, epic.getId()));
+        inMemoryTaskManager.getEpicById(epic.getId());
+        System.out.println(inMemoryTaskManager.getHistoryList());
 
+        inMemoryTaskManager.getSubtaskById(subtask3.getId());
+        System.out.println(inMemoryTaskManager.getHistoryList());
 
-        Epic epic1 = new Epic("аза1", "гусейнов", Status.IN_PROGRESS);
-        epic1.setId(100);
-        manager.createEpic(epic1);
-        manager.getListAllEpic();
-        System.out.println(manager.getListAllEpic());
+        inMemoryTaskManager.getEpicById(epic1.getId());
+        System.out.println(inMemoryTaskManager.getHistoryList());
 
-        manager.createSubtask(new Subtask("gor", "gors", Status.IN_PROGRESS, epic1.getId()));
-        manager.createSubtask(new Subtask("gor1", "gors1", Status.IN_PROGRESS, epic1.getId()));
-        manager.getSubtasksByEpic(epic1);
-        manager.getListAllSubtask();
-        manager.getEpicById(24);
-        manager.getEpicById(100);
-        System.out.println(inMemoryHistoryManager.getHistory());
+        inMemoryTaskManager.getSubtaskById(subtask2.getId());
+        System.out.println(inMemoryTaskManager.getHistoryList());
+
     }
 }
