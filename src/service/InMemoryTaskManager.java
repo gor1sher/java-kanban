@@ -21,7 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyList.getHistory();
     }
 
-    public void removeHistory(int id){
+    public void removeHistory(int id) {
         historyList.remove(id);
     }
 
