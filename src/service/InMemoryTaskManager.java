@@ -21,13 +21,16 @@ public class InMemoryTaskManager implements TaskManager {
         return historyList.getHistory();
     }
 
+    public void removeHistory(int id){
+        historyList.remove(id);
+    }
+
     public InMemoryTaskManager(InMemoryHistoryManager inMemoryHistoryManager) {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
         this.historyList = inMemoryHistoryManager;
     }
-
 
     private int generateId() {
         return id++;
