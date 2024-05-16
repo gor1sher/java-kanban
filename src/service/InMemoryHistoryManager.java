@@ -8,11 +8,11 @@ import java.util.HashMap;
 public class InMemoryHistoryManager implements HistoryManager {
 
     private HashMap<Integer, Node> historyMap;
-    private List historyList;
+    private CustomLinkedList historyList;
 
     public InMemoryHistoryManager() {
         historyMap = new HashMap<>();
-        historyList = new List();
+        historyList = new CustomLinkedList();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasks;
     }
 
-    public class Node {
+    private class Node {
 
         Task task;
         Node next;
@@ -63,12 +63,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    class List {
+    private class CustomLinkedList {
 
         Node head;
         Node tail;
 
-        List() {
+        CustomLinkedList() {
             head = null;
             tail = null;
         }
