@@ -79,6 +79,6 @@ public class InMemoryHistoryManagerTest {
 
         ArrayList<Task> list1 = inMemoryTaskManager.getHistoryList();
 
-        assertTrue(list.contains(subtask));
+        assertTrue(list1.contains(subtask));
     }
 }
