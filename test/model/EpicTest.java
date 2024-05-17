@@ -1,5 +1,5 @@
-import model.Epic;
-import model.Status;
+package model;
+
 import org.junit.jupiter.api.Test;
 import service.InMemoryHistoryManager;
 import service.InMemoryTaskManager;
@@ -11,7 +11,7 @@ class EpicTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
 
     @Test
-    void addSubtask_shouldNotAddYourself_Epic() {
+    void addSubtask_shouldNotAddYourself() {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
         inMemoryTaskManager.createEpic(epic);
         epic.addSubtack(epic.getId());
@@ -19,7 +19,7 @@ class EpicTest {
     }
 
     @Test
-    void setId_eachOtherIfTheirIdIsEqual_Epic() {
+    void setId_eachOtherIfTheirIdIsEqual() {
         Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
         epic.setId(20);
         Epic epic1 = new Epic("аза", "куув", Status.IN_PROGRESS);
