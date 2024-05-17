@@ -29,10 +29,12 @@ public class InMemoryHistoryManagerTest {
     @Test
     void remove_removeFromMapAndlinkedList() {
         Epic epic = new Epic("аза1", "куув", Status.IN_PROGRESS);
+        epic.setId(12);
         Task task = new Task("аза2", "куув", Status.NEW);
+        task.setId(15);
 
-        inMemoryHistoryManager.add(1, epic);
-        inMemoryHistoryManager.add(2, task);
+        inMemoryHistoryManager.add(epic.getId(), epic);
+        inMemoryHistoryManager.add(task.getId(), task);
 
         ArrayList<Task> list = inMemoryHistoryManager.getHistory();
 
