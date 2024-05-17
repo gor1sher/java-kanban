@@ -17,7 +17,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Integer id, Task task) {
-        if (historyMap.containsKey(id)){
+        if (historyMap.containsKey(id)) {
             remove(id);
         }
         historyList.add(task);
