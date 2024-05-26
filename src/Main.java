@@ -1,39 +1,30 @@
 import model.Epic;
 import model.Status;
 import model.Subtask;
-import service.InMemoryTaskManager;
-import service.Managers;
+import model.Task;
+import service.FileBackedTaskManager;
+import service.InMemoryHistoryManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
-        Epic epic = new Epic("дом", "3 шага для постройки дома", Status.NEW);
-        inMemoryTaskManager.createEpic(epic);
-        Subtask subtask1 = new Subtask("посадить дерево", "березка", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask("выростить сына", "иван", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask2);
-        Subtask subtask3 = new Subtask("построить дом", "двухэтажный", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask3);
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(new InMemoryHistoryManager());
+        Epic epic = new Epic("дом", "купить дом", Status.NEW);
+        fileBackedTaskManager.createEpic(epic);
+        Subtask subtask = new Subtask("посадить дерево", "березка", Status.DONE, epic.getId());
+        fileBackedTaskManager.createSubtask(subtask);
+        Task task = new Task("аза2", "куув", Status.NEW);
+        fileBackedTaskManager.createTask(task);
 
-        Epic epic1 = new Epic("машина", "купить машину", Status.NEW);
-        inMemoryTaskManager.createEpic(epic1);
+        fileBackedTaskManager.readFail();
 
-        inMemoryTaskManager.getSubtaskById(subtask1.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
-        inMemoryTaskManager.getEpicById(epic.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
-        inMemoryTaskManager.getSubtaskById(subtask3.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
-        inMemoryTaskManager.getEpicById(epic1.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
-        inMemoryTaskManager.getSubtaskById(subtask2.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
+        HashMap<Integer, Task> mapa = fileBackedTaskManager.getReadTasks();
+        for (Map.Entry<Integer, Task> entry : mapa.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue().getName() + " " + entry.getValue().getDescription() + " " +
+                    entry.getValue().getStatus());
+        }
     }
 }
