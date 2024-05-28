@@ -1,6 +1,7 @@
-package service;
+package service.HistoryManagers;
 
 import model.Task;
+import service.HistoryManagers.HistoryManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
