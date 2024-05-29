@@ -4,7 +4,7 @@ import model.Epic;
 import model.Status;
 import model.Task;
 import org.junit.jupiter.api.Test;
-import service.HistoryManagers.InMemoryHistoryManager;
+import service.historyManagers.InMemoryHistoryManager;
 
 import java.util.ArrayList;
 

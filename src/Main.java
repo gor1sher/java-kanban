@@ -2,8 +2,8 @@ import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
-import service.TaskManagers.FileBackedTaskManager;
-import service.HistoryManagers.InMemoryHistoryManager;
+import service.taskManagers.saveTasks.FileBackedTaskManager;
+import service.historyManagers.InMemoryHistoryManager;
 
 public class Main {
 

@@ -1,9 +1,11 @@
-package service.TaskManagers;
+package service.taskManagers.saveTasks;
 
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import service.HistoryManagers.InMemoryHistoryManager;
+import service.historyManagers.InMemoryHistoryManager;
+import service.taskManagers.InMemoryTaskManager;
+import service.taskManagers.exception.ManagerSaveException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,11 +19,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager(InMemoryHistoryManager inMemoryHistoryManager) {
         super(inMemoryHistoryManager);
+        readFile();
     }
 
     @Override
     public Task createTask(Task task) {
-        readFile();
         super.createTask(task);
         save();
         return task;
@@ -29,7 +31,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Epic createEpic(Epic epic) {
-        readFile();
         super.createEpic(epic);
         save();
         return epic;
@@ -37,7 +38,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
-        readFile();
         super.createSubtask(subtask);
         save();
         return subtask;
@@ -45,44 +45,41 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void removeTask(int id) {
-        readFile();
         super.removeTask(id);
         save();
     }
 
     @Override
     public void removeEpic(int id) {
-        readFile();
         super.removeEpic(id);
         save();
     }
 
     @Override
     public void removeSubtask(int id) {
-        readFile();
         super.removeSubtask(id);
         save();
     }
 
-    void save() {
+    private void save() {
         try (FileWriter fileWriter = new FileWriter(file, false)) {
             for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
-                fileWriter.write(TaskCsvConverter.subtaskToCsv(entry.getKey(), entry.getValue()));
+                fileWriter.write(TaskCsvConverter.subtaskToCsv(entry.getValue()));
             }
 
             for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-                fileWriter.write(TaskCsvConverter.epicToCsv(entry.getKey(), entry.getValue()));
+                fileWriter.write(TaskCsvConverter.epicToCsv(entry.getValue()));
             }
 
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-                fileWriter.write(TaskCsvConverter.taskToCsv(entry.getKey(), entry.getValue()));
+                fileWriter.write(TaskCsvConverter.taskToCsv(entry.getValue()));
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла.");
         }
     }
 
-    public void readFile() {
+    private void readFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             while (br.ready()) {
                 String line = br.readLine();
@@ -91,10 +88,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 int id = Integer.parseInt(columns[0].trim());
                 String type = columns[1].trim();
 
-                if (type.equals("Task")) {
+                if (type.equals("TASK")) {
                     Task task = TaskCsvConverter.csvLineToTask(line);
                     tasks.put(id, task);
-                } else if (type.equals("Epic")) {
+                } else if (type.equals("EPIC")) {
                     Epic epic = TaskCsvConverter.csvLineToEpic(line);
                     epics.put(id, epic);
                 } else {
@@ -102,14 +99,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     subtasks.put(id, subtask);
                 }
 
-                if (id > getId()) {
-                    setId(id);
-                }
+                if (id > super.id) super.id = id;
             }
         } catch (IOException e) {
-            System.out.println("Произошла ошибка во время записи файла.");
+            throw new ManagerSaveException("Произошла ошибка во время записи файла.");
         } catch (NumberFormatException e) {
-            System.out.println("Ошибка формата числа в строке: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка формата числа в строке: " + e.getMessage());
         }
     }
 }

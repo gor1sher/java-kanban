@@ -1,6 +1,6 @@
-package service.TaskManagers;
+package service.taskManagers;
 
-import service.HistoryManagers.InMemoryHistoryManager;
+import service.historyManagers.InMemoryHistoryManager;
 
 public class Managers {
 

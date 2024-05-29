@@ -1,4 +1,4 @@
-package service.TaskManagers;
+package service.taskManagers.saveTasks;
 
 import model.Epic;
 import model.Status;
@@ -7,21 +7,21 @@ import model.Task;
 
 public class TaskCsvConverter {
 
-    public static String taskToCsv(Integer id, Task task) {
+    public static String taskToCsv(Task task) {
         return String.format("%d,%s,%s,%s,%s\n",
-                id, "Task", task.getName(),
+                task.getId(), TaskType.TASK, task.getName(),
                 task.getStatus().toString(), task.getDescription());
     }
 
-    public static String epicToCsv(Integer id, Epic task) {
+    public static String epicToCsv(Epic task) {
         return String.format("%d,%s,%s,%s,%s\n",
-                id, "Epic", task.getName(),
+                task.getId(), TaskType.EPIC, task.getName(),
                 task.getStatus().toString(), task.getDescription());
     }
 
-    public static String subtaskToCsv(Integer id, Subtask task) {
+    public static String subtaskToCsv(Subtask task) {
         return String.format("%d,%s,%s,%s,%d,%s\n",
-                id, "Subtask", task.getName(),
+                task.getId(), TaskType.SUBTASK, task.getName(),
                 task.getStatus().toString(), task.getEpic(),
                 task.getDescription());
     }
@@ -39,7 +39,7 @@ public class TaskCsvConverter {
         Status status = Status.valueOf(columns[3].trim());
         int id = Integer.parseInt(columns[0].trim());
 
-        Task task = new Epic(columns[2], columns[4], status);
+        Task task = new Task(columns[2], columns[4], status);
         task.setId(id);
 
         return task;

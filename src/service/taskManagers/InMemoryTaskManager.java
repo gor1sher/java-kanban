@@ -1,10 +1,10 @@
-package service.TaskManagers;
+package service.taskManagers;
 
 import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
-import service.HistoryManagers.InMemoryHistoryManager;
+import service.historyManagers.InMemoryHistoryManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private static int id = 1;
+    protected int id = 1;
     protected final HashMap<Integer, Task> tasks;
     protected final HashMap<Integer, Epic> epics;
     protected final HashMap<Integer, Subtask> subtasks;
@@ -35,14 +35,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int generateId() {
         return id++;
-    }
-
-    protected void setId(int id) {
-        InMemoryTaskManager.id = id;
-    }
-
-    public static int getId() {
-        return id;
     }
 
     @Override
