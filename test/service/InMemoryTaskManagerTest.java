@@ -5,6 +5,8 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.Test;
+import service.historyManagers.InMemoryHistoryManager;
+import service.taskManagers.InMemoryTaskManager;
 
 import java.util.ArrayList;
 

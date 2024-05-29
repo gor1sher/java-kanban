@@ -1,39 +1,30 @@
 import model.Epic;
 import model.Status;
 import model.Subtask;
-import service.InMemoryTaskManager;
-import service.Managers;
+import model.Task;
+import service.taskManagers.saveTasks.FileBackedTaskManager;
+import service.historyManagers.InMemoryHistoryManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
-        Epic epic = new Epic("дом", "3 шага для постройки дома", Status.NEW);
-        inMemoryTaskManager.createEpic(epic);
-        Subtask subtask1 = new Subtask("посадить дерево", "березка", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask("выростить сына", "иван", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask2);
-        Subtask subtask3 = new Subtask("построить дом", "двухэтажный", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask3);
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(new InMemoryHistoryManager());
+        Epic epic4 = new Epic("дом", "купить дом", Status.NEW);
+        fileBackedTaskManager.createEpic(epic4);
+        Subtask subtask5 = new Subtask("посадить дерево", "березка", Status.DONE, epic4.getId());
+        fileBackedTaskManager.createSubtask(subtask5);
+        Task tas7k = new Task("аза2", "куув", Status.NEW);
+        fileBackedTaskManager.createTask(tas7k);
 
-        Epic epic1 = new Epic("машина", "купить машину", Status.NEW);
-        inMemoryTaskManager.createEpic(epic1);
+        fileBackedTaskManager.removeTask(tas7k.getId());
 
-        inMemoryTaskManager.getSubtaskById(subtask1.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        Epic epic1 = new Epic("дом", "купить дом", Status.NEW);
+        fileBackedTaskManager.createEpic(epic1);
 
-        inMemoryTaskManager.getEpicById(epic.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        Subtask subtask1 = new Subtask("посадить дерево", "березка", Status.DONE, epic1.getId());
+        fileBackedTaskManager.createSubtask(subtask1);
 
-        inMemoryTaskManager.getSubtaskById(subtask3.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
-        inMemoryTaskManager.getEpicById(epic1.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
-        inMemoryTaskManager.getSubtaskById(subtask2.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
-
+        Subtask subtask2 = new Subtask("посадить дерево", "березка", Status.DONE, epic1.getId());
+        fileBackedTaskManager.createSubtask(subtask2);
     }
 }
