@@ -1,10 +1,17 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
     private String name;
     private String description;
     private Status status;
     private Integer id;
+
+    private Duration duration;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public Task() {
     }
@@ -17,10 +24,14 @@ public class Task {
         this.id = id;
     }
 
-    public Task(String name, String description, Status status) {
+    public Task(String name, String description, Status status, Duration duration,
+                LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
     }
 
     public String getName() {
@@ -45,6 +56,18 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getEndTime(){
+        return endTime;
+    }
+
+    public LocalDateTime getStartTime(){
+        return startTime;
+    }
+
+    public Duration getDuration(){
+        return duration;
     }
 
     @Override

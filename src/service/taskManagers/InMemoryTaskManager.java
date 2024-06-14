@@ -5,10 +5,10 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 import service.historyManagers.InMemoryHistoryManager;
+import service.taskManagers.exception.NotFoundException;
+import service.taskManagers.exception.ValidationException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -17,6 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Epic> epics;
     protected final HashMap<Integer, Subtask> subtasks;
     protected final InMemoryHistoryManager historyList;
+    private TreeSet<Task> priorityTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+
 
     public ArrayList<Task> getHistoryList() {
         return historyList.getHistory();
@@ -114,6 +116,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateEpic(Epic newEpic) {
         Epic epic = epics.get(newEpic.getId());
+        if (epic == null)
+            throw new NotFoundException("Epic id = " + epic.getId());
+
+        priorityTasks.remove(epic);
+        addPriorityTask(epic);
         epics.put(epic.getId(), newEpic);
     }
 
@@ -144,6 +151,23 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Integer> getSubtasksByEpic(Epic specificEpic) {
         Epic epic = epics.get(specificEpic.getId());
         return epic.getSubtasks();
+    }
+
+    public boolean checkPriorityTask(Task task){
+        return priorityTasks.stream()
+                .anyMatch(task1 -> task1.getEndTime().isBefore(task.getStartTime()) ||
+                        task1.getStartTime().isAfter(task.getEndTime()));
+    }
+
+    public void addPriorityTask(Task task){
+        if(checkPriorityTask(task))
+            priorityTasks.add(task);
+        else
+            throw new ValidationException("Пересечение с задачей");
+    }
+
+    public TreeSet<Task> getPrioritizedTasks(){
+        return priorityTasks;
     }
 
     private void updateStatusForEpic(Epic epic) {

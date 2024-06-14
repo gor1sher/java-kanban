@@ -1,13 +1,16 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
     private List<Integer> subtasks;
 
-    public Epic(String name, String description, Status status) {
-        super(name, description, status);
+    public Epic(String name, String description, Status status, Duration duration,
+                LocalDateTime startTime) {
+        super(name, description, status, duration, startTime);
         subtasks = new ArrayList<>();
     }
 
