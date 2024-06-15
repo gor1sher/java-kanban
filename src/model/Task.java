@@ -59,20 +59,20 @@ public class Task {
         this.status = status;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public LocalDateTime getStartTime(){
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public Duration getDuration(){
+    public Duration getDuration() {
         return duration;
     }
 
-    public void setDuration(Optional<Duration> duration){
-        if(duration.isPresent()){
+    public void setDuration(Optional<Duration> duration) {
+        if (duration.isPresent()) {
             this.duration = duration.get();
         }
     }

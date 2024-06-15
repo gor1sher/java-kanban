@@ -171,24 +171,24 @@ public class InMemoryTaskManager implements TaskManager {
         return epic.getSubtasks();
     }
 
-    public boolean checkPriorityTask(Task task){
+    public boolean checkPriorityTask(Task task) {
         return priorityTasks.stream()
                 .anyMatch(task1 -> task1.getEndTime().isBefore(task.getStartTime()) ||
                         task1.getStartTime().isAfter(task.getEndTime()));
     }
 
-    public void addPriorityTask(Task task){
-        if(checkPriorityTask(task))
+    public void addPriorityTask(Task task) {
+        if (checkPriorityTask(task))
             priorityTasks.add(task);
         else
             throw new ValidationException("Пересечение с задачей");
     }
 
-    public TreeSet<Task> getPrioritizedTasks(){
+    public TreeSet<Task> getPrioritizedTasks() {
         return priorityTasks;
     }
 
-    private void updateLocalDateTimeForEpic(Epic epic){
+    private void updateLocalDateTimeForEpic(Epic epic) {
         ArrayList<Integer> subtasksList = epic.getSubtasks();
 
         epic.setDuration(subtasksList.stream()

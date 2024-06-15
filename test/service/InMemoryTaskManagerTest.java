@@ -31,8 +31,8 @@ public class InMemoryTaskManagerTest {
         assertEquals(epic.getStatus(), saveEpic.getStatus());
 
         Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, epic.getId(),
-                        Duration.ofMinutes(22),
-                        LocalDateTime.of(2023, 3, 16, 12, 30, 0));
+                Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 16, 12, 30, 0));
 
         Subtask saveSubtask = inMemoryTaskManager.createSubtask(subtask);
 
