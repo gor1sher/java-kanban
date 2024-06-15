@@ -5,25 +5,33 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class TaskCsvConverter {
 
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
     public static String taskToCsv(Task task) {
-        return String.format("%d,%s,%s,%s,%s\n",
+        return String.format("%d,%s,%s,%s,%s,%s,%s\n",
                 task.getId(), TaskType.TASK, task.getName(),
-                task.getStatus().toString(), task.getDescription());
+                task.getStatus().toString(), task.getDescription(),
+                task.getDuration().toString(), task.getStartTime().format(formatter));
     }
 
     public static String epicToCsv(Epic task) {
-        return String.format("%d,%s,%s,%s,%s\n",
+        return String.format("%d,%s,%s,%s,%s,%s,%s\n",
                 task.getId(), TaskType.EPIC, task.getName(),
-                task.getStatus().toString(), task.getDescription());
+                task.getStatus().toString(), task.getDescription(),
+                task.getDuration().toString(), task.getStartTime().format(formatter));
     }
 
     public static String subtaskToCsv(Subtask task) {
-        return String.format("%d,%s,%s,%s,%d,%s\n",
+        return String.format("%d,%s,%s,%s,%d,%s,%s,%s\n",
                 task.getId(), TaskType.SUBTASK, task.getName(),
                 task.getStatus().toString(), task.getEpic(),
-                task.getDescription());
+                task.getDescription(), task.getDuration().toString(), task.getStartTime().format(formatter));
     }
 
     private static String[] csvLine(String line) {
@@ -38,8 +46,10 @@ public class TaskCsvConverter {
         String[] columns = csvLine(line);
         Status status = Status.valueOf(columns[3].trim());
         int id = Integer.parseInt(columns[0].trim());
+        Duration duration = Duration.parse(columns[5].trim());
+        LocalDateTime localDateTime = LocalDateTime.parse(columns[6].trim(), formatter);
 
-        Task task = new Task(columns[2], columns[4], status);
+        Task task = new Task(columns[2], columns[4], status, duration, localDateTime);
         task.setId(id);
 
         return task;
@@ -51,8 +61,10 @@ public class TaskCsvConverter {
         Integer epic = Integer.parseInt(columns[4].trim());
         Status status = Status.valueOf(columns[3].trim());
         int id = Integer.parseInt(columns[0].trim());
+        Duration duration = Duration.parse(columns[6].trim());
+        LocalDateTime localDateTime = LocalDateTime.parse(columns[7].trim(), formatter);
 
-        Subtask subtask = new Subtask(columns[2], description, status, epic);
+        Subtask subtask = new Subtask(columns[2], description, status, epic, duration, localDateTime);
         subtask.setId(id);
 
         return subtask;
@@ -62,8 +74,10 @@ public class TaskCsvConverter {
         String[] columns = csvLine(line);
         Status status = Status.valueOf(columns[3].trim());
         int id = Integer.parseInt(columns[0].trim());
+        Duration duration = Duration.parse(columns[5].trim());
+        LocalDateTime localDateTime = LocalDateTime.parse(columns[6].trim(), formatter);
 
-        Epic epic = new Epic(columns[2], columns[4], status);
+        Epic epic = new Epic(columns[2], columns[4], status, duration, localDateTime);
         epic.setId(id);
 
         return epic;

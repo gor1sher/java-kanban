@@ -2,6 +2,7 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class Task {
     private String name;
@@ -68,6 +69,10 @@ public class Task {
 
     public Duration getDuration(){
         return duration;
+    }
+
+    public void setDuration(Optional<Duration> duration){
+        this.duration = duration;
     }
 
     @Override

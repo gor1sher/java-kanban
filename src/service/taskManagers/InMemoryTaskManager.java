@@ -43,6 +43,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task createTask(Task task) {
         task.setId(generateId());
         tasks.put(task.getId(), task);
+        addPriorityTask(task);
         return task;
     }
 
@@ -60,11 +61,16 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getEpic());
         epic.addSubtack(subtask.getId());
         updateStatusForEpic(epic);
+
+        updateLocalDateTimeForEpic(epic);
+        addPriorityTask(subtask);
+
         return subtask;
     }
 
     @Override
     public void removeTask(int id) {
+        priorityTasks.remove(tasks.get(id));
         tasks.remove(id);
     }
 
@@ -86,7 +92,9 @@ public class InMemoryTaskManager implements TaskManager {
         epic.removeSubtask(subtask.getId());
         updateStatusForEpic(epic);
 
+        priorityTasks.remove(subtask);
         subtasks.remove(id);
+        updateLocalDateTimeForEpic(epic);
     }
 
     @Override
@@ -110,6 +118,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task newTask) {
         Task task = tasks.get(newTask.getId());
+        if (task == null)
+            throw new NotFoundException("Epic id = " + task.getId());
+
+        priorityTasks.remove(task.getId());
+        addPriorityTask(task);
         tasks.put(task.getId(), newTask);
     }
 
@@ -128,6 +141,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubtask(Subtask newSubtask) {
         Epic epic = epics.get(newSubtask.getEpic());
         Subtask subtask = subtasks.get(newSubtask.getId());
+        if (subtask == null)
+            throw new NotFoundException("Epic id = " + subtask.getId());
+
+        priorityTasks.remove(subtask);
+        addPriorityTask(subtask);
         subtasks.put(subtask.getId(), newSubtask);
         updateStatusForEpic(epic);
     }
@@ -170,6 +188,14 @@ public class InMemoryTaskManager implements TaskManager {
         return priorityTasks;
     }
 
+    private void updateLocalDateTimeForEpic(Epic epic){
+        ArrayList<Integer> subtasksList = epic.getSubtasks();
+
+        epic.setDuration(subtasksList.stream()
+                .map(a -> subtasks.get(a).getDuration())
+                .reduce((a, b) -> a.plus(b)));
+    }
+
     private void updateStatusForEpic(Epic epic) {
         ArrayList<Integer> subtasksList = epic.getSubtasks();
         int countDone = 0;
@@ -197,7 +223,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.NEW);
         }
-
     }
 }
 

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import service.taskManagers.InMemoryTaskManager;
 import service.taskManagers.Managers;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,10 +21,17 @@ public class ManagersTest {
         InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
         assertNotNull(inMemoryTaskManager);
 
-        Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
+
+        Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 17, 12, 30, 0));
+
+        Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, epic.getId(),
+                Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 16, 12, 30, 0));
+
         epic = inMemoryTaskManager.createEpic(epic);
-        Subtask subtask = new Subtask("gor", "qwert", Status.IN_PROGRESS, epic.getId());
-        Task task = new Task("аза", "куув", Status.NEW);
         subtask = inMemoryTaskManager.createSubtask(subtask);
         task = inMemoryTaskManager.createTask(task);
 

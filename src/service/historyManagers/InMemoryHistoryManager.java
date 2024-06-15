@@ -2,11 +2,8 @@ package service.historyManagers;
 
 import model.Task;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.TreeSet;
 
 public class InMemoryHistoryManager implements HistoryManager {
 

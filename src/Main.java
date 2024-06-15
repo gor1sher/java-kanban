@@ -5,26 +5,26 @@ import model.Task;
 import service.taskManagers.saveTasks.FileBackedTaskManager;
 import service.historyManagers.InMemoryHistoryManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
 
     public static void main(String[] args) {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(new InMemoryHistoryManager());
-        Epic epic4 = new Epic("дом", "купить дом", Status.NEW);
-        fileBackedTaskManager.createEpic(epic4);
-        Subtask subtask5 = new Subtask("посадить дерево", "березка", Status.DONE, epic4.getId());
-        fileBackedTaskManager.createSubtask(subtask5);
-        Task tas7k = new Task("аза2", "куув", Status.NEW);
-        fileBackedTaskManager.createTask(tas7k);
 
-        fileBackedTaskManager.removeTask(tas7k.getId());
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
 
-        Epic epic1 = new Epic("дом", "купить дом", Status.NEW);
-        fileBackedTaskManager.createEpic(epic1);
+        Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, 100,
+                Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 16, 12, 30, 0));
 
-        Subtask subtask1 = new Subtask("посадить дерево", "березка", Status.DONE, epic1.getId());
-        fileBackedTaskManager.createSubtask(subtask1);
+        Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 17, 12, 30, 0));
 
-        Subtask subtask2 = new Subtask("посадить дерево", "березка", Status.DONE, epic1.getId());
-        fileBackedTaskManager.createSubtask(subtask2);
+        fileBackedTaskManager.createTask(task);
+        fileBackedTaskManager.createTask(epic);
+        fileBackedTaskManager.createTask(subtask);
     }
 }
