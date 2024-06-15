@@ -72,7 +72,9 @@ public class Task {
     }
 
     public void setDuration(Optional<Duration> duration){
-        this.duration = duration;
+        if(duration.isPresent()){
+            this.duration = duration.get();
+        }
     }
 
     @Override
