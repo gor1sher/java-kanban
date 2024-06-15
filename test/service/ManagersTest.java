@@ -21,8 +21,8 @@ public class ManagersTest {
         InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
         assertNotNull(inMemoryTaskManager);
 
-        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
-                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
+        Epic epic = new Epic("дом", "купить дом", Status.NEW);
+        epic = inMemoryTaskManager.createEpic(epic);
 
         Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
                 LocalDateTime.of(2023, 3, 17, 12, 30, 0));
@@ -31,7 +31,6 @@ public class ManagersTest {
                 Duration.ofMinutes(22),
                 LocalDateTime.of(2023, 3, 16, 12, 30, 0));
 
-        epic = inMemoryTaskManager.createEpic(epic);
         subtask = inMemoryTaskManager.createSubtask(subtask);
         task = inMemoryTaskManager.createTask(task);
 

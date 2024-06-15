@@ -172,8 +172,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public boolean checkPriorityTask(Task task) {
+        if(priorityTasks.isEmpty()) return true;
         return priorityTasks.stream()
-                .anyMatch(task1 -> task1.getEndTime().isBefore(task.getStartTime()) ||
+                .allMatch(task1 -> task1.getEndTime().isBefore(task.getStartTime()) ||
                         task1.getStartTime().isAfter(task.getEndTime()));
     }
 

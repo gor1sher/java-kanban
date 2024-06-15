@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Epic extends Task {
     private List<Integer> subtasks;
@@ -11,6 +12,13 @@ public class Epic extends Task {
     public Epic(String name, String description, Status status, Duration duration,
                 LocalDateTime startTime) {
         super(name, description, status, duration, startTime);
+        subtasks = new ArrayList<>();
+    }
+
+    public Epic(String name, String description, Status status) {
+        super.setName(name);
+        super.setStatus(status);
+        this.setDescription(description);
         subtasks = new ArrayList<>();
     }
 
@@ -32,6 +40,12 @@ public class Epic extends Task {
             if (!subtask.equals(super.getId())) {
                 subtasks.add(subtask);
             }
+        }
+    }
+
+    public void setDuration(Optional<Duration> duration) {
+        if (duration.isPresent()) {
+            super.duration = duration.get();
         }
     }
 

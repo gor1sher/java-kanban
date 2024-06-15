@@ -10,7 +10,7 @@ public class Task {
     private Status status;
     private Integer id;
 
-    private Duration duration;
+    Duration duration;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
@@ -69,12 +69,6 @@ public class Task {
 
     public Duration getDuration() {
         return duration;
-    }
-
-    public void setDuration(Optional<Duration> duration) {
-        if (duration.isPresent()) {
-            this.duration = duration.get();
-        }
     }
 
     @Override
