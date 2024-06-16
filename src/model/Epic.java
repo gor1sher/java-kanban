@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public class Epic extends Task {
     private List<Integer> subtasks;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description, Status status, Duration duration,
                 LocalDateTime startTime) {

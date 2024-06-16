@@ -7,6 +7,7 @@ import model.Task;
 import org.junit.Test;
 import service.historyManagers.InMemoryHistoryManager;
 import service.taskManagers.InMemoryTaskManager;
+import service.taskManagers.exception.ValidationException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -134,7 +135,7 @@ public class InMemoryTaskManagerTest {
 
     @Test
     public void updateStatusForEpic_statusNew() {
-        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+        Epic epic = new Epic("дом", "купить дом", Status.IN_PROGRESS, Duration.ofMinutes(22),
                 LocalDateTime.of(2023, 3, 15, 12, 30, 0));
 
         inMemoryTaskManager.createEpic(epic);
@@ -146,5 +147,20 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.createSubtask(subtask);
 
         assertEquals(Status.NEW, epic.getStatus());
+    }
+
+    @Test
+    public void updateTimeEpic_testException() {
+        assertThrows(ValidationException.class, () -> {
+            Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                    LocalDateTime.of(2023, 3, 17, 12, 30, 0));
+
+            inMemoryTaskManager.createTask(task);
+
+            Task task1 = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                    LocalDateTime.of(2023, 3, 17, 12, 30, 0));
+
+            inMemoryTaskManager.createTask(task1);
+        }, "Пересечение по времени задач должно приводить к исключению");
     }
 }

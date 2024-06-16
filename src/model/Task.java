@@ -9,9 +9,8 @@ public class Task {
     private Status status;
     private Integer id;
 
-    Duration duration;
+    protected Duration duration;
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
 
     public Task() {
     }
@@ -31,7 +30,6 @@ public class Task {
         this.status = status;
         this.duration = duration;
         this.startTime = startTime;
-        this.endTime = startTime.plus(duration);
     }
 
     public String getName() {
@@ -59,7 +57,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return startTime.plus(duration);
     }
 
     public LocalDateTime getStartTime() {

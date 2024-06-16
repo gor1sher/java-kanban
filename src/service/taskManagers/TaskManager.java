@@ -7,7 +7,7 @@ import model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-interface TaskManager {
+public interface TaskManager {
 
     public Task createTask(Task task);
 

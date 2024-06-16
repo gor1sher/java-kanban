@@ -21,10 +21,9 @@ public class TaskCsvConverter {
     }
 
     public static String epicToCsv(Epic task) {
-        return String.format("%d,%s,%s,%s,%s,%s,%s\n",
+        return String.format("%d,%s,%s,%s,%s\n",
                 task.getId(), TaskType.EPIC, task.getName(),
-                task.getStatus().toString(), task.getDescription(),
-                task.getDuration().toString(), task.getStartTime().format(formatter));
+                task.getStatus().toString(), task.getDescription());
     }
 
     public static String subtaskToCsv(Subtask task) {
@@ -74,10 +73,9 @@ public class TaskCsvConverter {
         String[] columns = csvLine(line);
         Status status = Status.valueOf(columns[3].trim());
         int id = Integer.parseInt(columns[0].trim());
-        Duration duration = Duration.parse(columns[5].trim());
-        LocalDateTime localDateTime = LocalDateTime.parse(columns[6].trim(), formatter);
 
-        Epic epic = new Epic(columns[2], columns[4], status, duration, localDateTime);
+
+        Epic epic = new Epic(columns[2], columns[4], status);
         epic.setId(id);
 
         return epic;
