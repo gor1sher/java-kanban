@@ -8,6 +8,7 @@ import service.historyManagers.InMemoryHistoryManager;
 import service.taskManagers.exception.NotFoundException;
 import service.taskManagers.exception.ValidationException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -61,9 +62,10 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.setId(generateId());
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpic());
-        updateTimeEpic(epic);
         epic.addSubtack(subtask.getId());
         updateStatusForEpic(epic);
+        updateStartTimeEpic(epic);
+        updateEndTimeEpic(epic);
 
         return subtask;
     }
@@ -94,7 +96,8 @@ public class InMemoryTaskManager implements TaskManager {
 
         priorityTasks.remove(subtask);
         subtasks.remove(id);
-        updateTimeEpic(epic);
+        updateStartTimeEpic(epic);
+        updateEndTimeEpic(epic);
     }
 
     @Override
@@ -146,7 +149,8 @@ public class InMemoryTaskManager implements TaskManager {
         addPriorityTask(subtask);
         subtasks.put(subtask.getId(), newSubtask);
         updateStatusForEpic(epic);
-        updateTimeEpic(epic);
+        updateStartTimeEpic(epic);
+        updateEndTimeEpic(epic);
     }
 
     @Override
@@ -189,12 +193,21 @@ public class InMemoryTaskManager implements TaskManager {
         return priorityTasks;
     }
 
-    private void updateTimeEpic(Epic epic) {
+    public void updateEndTimeEpic(Epic epic) {
         ArrayList<Integer> subtasksList = epic.getSubtasks();
 
         epic.setDuration(subtasksList.stream()
                 .map(a -> subtasks.get(a).getDuration())
                 .reduce((a, b) -> a.plus(b)));
+    }
+
+    public void updateStartTimeEpic(Epic epic) {
+        ArrayList<Integer> subtasksList = epic.getSubtasks();
+
+        epic.setStartTime(subtasksList.stream()
+                .map(a -> subtasks.get(a).getStartTime())
+                .filter(a -> a != null)
+                .min(LocalDateTime::compareTo));
     }
 
     private void updateStatusForEpic(Epic epic) {

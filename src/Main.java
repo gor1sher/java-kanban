@@ -15,8 +15,9 @@ public class Main {
 
         Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
                 LocalDateTime.of(2023, 3, 28, 11, 30, 0));
+        epic.setId(100);
 
-        Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, 100,
+        Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, epic.getId(),
                 Duration.ofMinutes(22),
                 LocalDateTime.of(2023, 3, 23, 12, 30, 0));
 
@@ -26,6 +27,8 @@ public class Main {
         fileBackedTaskManager.createTask(task);
         fileBackedTaskManager.createTask(epic);
         fileBackedTaskManager.createTask(subtask);
+
+        System.out.println(epic.getDuration());
 
     }
 }

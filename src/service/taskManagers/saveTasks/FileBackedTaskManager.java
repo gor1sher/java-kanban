@@ -16,6 +16,7 @@ import java.util.Map;
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final String file = "tasks.txt";
+    InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
 
     public FileBackedTaskManager(InMemoryHistoryManager inMemoryHistoryManager) {
         super(inMemoryHistoryManager);
@@ -100,6 +101,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
 
                 if (id > super.id) super.id = id;
+            }
+
+            for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
+                Epic epic = epics.get(entry.getValue().getEpic());
+
+                updateStartTimeEpic(epic);
+                updateEndTimeEpic(epic);
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла.");

@@ -50,6 +50,21 @@ public class Epic extends Task {
         }
     }
 
+    public void setStartTime(Optional<LocalDateTime> startTime) {
+        if (startTime.isPresent()) {
+            super.startTime = startTime.get();
+        }
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
     public void removeSubtask(Integer subtask) {
         subtasks.remove(subtask);
     }
