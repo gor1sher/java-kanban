@@ -207,7 +207,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .min(LocalDateTime::compareTo));
     }
 
-    public void updateEpicData(Epic epic){
+    public void updateEpicData(Epic epic) {
         updateStartTimeEpic(epic);
         updateEndTimeEpic(epic);
     }
