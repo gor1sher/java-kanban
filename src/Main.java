@@ -1,4 +1,3 @@
-import com.google.gson.Gson;
 import model.Epic;
 import model.Status;
 import model.Subtask;
