@@ -64,8 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getEpic());
         epic.addSubtack(subtask.getId());
         updateStatusForEpic(epic);
-        updateStartTimeEpic(epic);
-        updateEndTimeEpic(epic);
+        updateEpicData(epic);
 
         return subtask;
     }
@@ -96,8 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         priorityTasks.remove(subtask);
         subtasks.remove(id);
-        updateStartTimeEpic(epic);
-        updateEndTimeEpic(epic);
+        updateEpicData(epic);
     }
 
     @Override
@@ -149,8 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
         addPriorityTask(subtask);
         subtasks.put(subtask.getId(), newSubtask);
         updateStatusForEpic(epic);
-        updateStartTimeEpic(epic);
-        updateEndTimeEpic(epic);
+        updateEpicData(epic);
     }
 
     @Override
@@ -208,6 +205,11 @@ public class InMemoryTaskManager implements TaskManager {
                 .map(a -> subtasks.get(a).getStartTime())
                 .filter(a -> a != null)
                 .min(LocalDateTime::compareTo));
+    }
+
+    public void updateEpicData(Epic epic){
+        updateStartTimeEpic(epic);
+        updateEndTimeEpic(epic);
     }
 
     private void updateStatusForEpic(Epic epic) {

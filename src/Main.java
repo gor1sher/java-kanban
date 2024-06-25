@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import model.Epic;
 import model.Status;
 import model.Subtask;
@@ -29,6 +30,8 @@ public class Main {
         fileBackedTaskManager.createTask(subtask);
 
         System.out.println(epic.getDuration());
+
+        Gson gson = new Gson();
 
     }
 }

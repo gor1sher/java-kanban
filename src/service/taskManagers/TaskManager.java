@@ -41,4 +41,5 @@ public interface TaskManager {
 
     public ArrayList<Integer> getSubtasksByEpic(Epic specificEpic);
 
+    public ArrayList<Task> getHistoryList();
 }

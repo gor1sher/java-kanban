@@ -9,8 +9,8 @@ public class Task {
     private Status status;
     private Integer id;
 
-    protected Duration duration;
-    protected LocalDateTime startTime;
+    protected Duration duration = null;
+    protected LocalDateTime startTime = null;
 
     public Task() {
     }
@@ -28,13 +28,8 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
-        if (duration == null || startTime == null) {
-            this.duration = null;
-            this.startTime = null;
-        } else {
-            this.duration = duration;
-            this.startTime = startTime;
-        }
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
