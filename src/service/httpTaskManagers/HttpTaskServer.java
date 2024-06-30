@@ -1,6 +1,11 @@
 package service.httpTaskManagers;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.Epic;
@@ -13,6 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class HttpTaskServer implements HttpHandler {
 
@@ -44,14 +52,15 @@ public class HttpTaskServer implements HttpHandler {
         } catch (IOException e) {
             writeResponse(exchange, "Внутренняя ошибка сервера", 500);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             writeResponse(exchange, "Неизвестная ошибка", 500);
         }
     }
 
     public void delete(String[] pathParts, HttpExchange exchange) throws IOException {
         try {
-            int id = Integer.parseInt(pathParts[3].trim());
-            switch (pathParts[2]) {
+            int id = Integer.parseInt(pathParts[2].trim());
+            switch (pathParts[1]) {
                 case "tasks":
                     Task task = taskManager.getTaskById(id);
                     if (task == null) {
@@ -59,7 +68,8 @@ public class HttpTaskServer implements HttpHandler {
                         return;
                     }
                     taskManager.removeTask(task.getId());
-                    writeResponse(exchange, "Задача успешно удалена", 204);
+                    String removeTask = new Gson().toJson("Задача успешно удалена");
+                    writeResponse(exchange, removeTask, 204);
                     break;
                 case "subtasks":
                     Subtask subtask = taskManager.getSubtaskById(id);
@@ -68,7 +78,8 @@ public class HttpTaskServer implements HttpHandler {
                         return;
                     }
                     taskManager.removeSubtask(subtask.getId());
-                    writeResponse(exchange, "Подзадача успешно удалена", 204);
+                    String removeSubtask = new Gson().toJson("Подзадача успешно удалена");
+                    writeResponse(exchange, removeSubtask, 204);
                     break;
                 case "epics":
                     Epic epic = taskManager.getEpicById(id);
@@ -77,7 +88,8 @@ public class HttpTaskServer implements HttpHandler {
                         return;
                     }
                     taskManager.removeEpic(epic.getId());
-                    writeResponse(exchange, "Эпик успешно удален", 204);
+                    String removeEpic = new Gson().toJson("Эпик успешно удален");
+                    writeResponse(exchange, removeEpic, 204);
                     break;
                 default:
                     writeResponse(exchange, "Неверный тип задачи", 400);
@@ -86,51 +98,49 @@ public class HttpTaskServer implements HttpHandler {
         } catch (NumberFormatException e) {
             writeResponse(exchange, "Неверный формат идентификатора", 400);
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             writeResponse(exchange, "Ошибка ввода-вывода", 500);
         }
     }
 
-    public void post(String[] pathParts, HttpExchange exchange) throws IOException {
+    private void post(String[] pathParts, HttpExchange exchange) throws IOException {
         InputStream inputStream = exchange.getRequestBody();
 
-        switch (pathParts[2]) {
-            case "tasks":
-                Task task = taskFromJson(inputStream);
-
-                try {
+        try {
+            switch (pathParts[1]) {
+                case "tasks":
+                    Task task = taskFromJson(inputStream);
                     if (task.getId() >= 0) {
                         taskManager.updateTask(task);
                     } else {
                         taskManager.createTask(task);
                     }
-                    writeResponse(exchange, "Задача успешно создана", 201);
-                } catch (ValidationException e) {
-                    writeResponse(exchange, "Задача пересекается с существующими", 409);
-                }
-                break;
-            case "subtasks":
-                Subtask subtask = subtaskFromJson(inputStream);
 
-                try {
+                    String taskJson = new Gson().toJson("Задача успешно создана");
+                    writeResponse(exchange, taskJson, 201);
+                    break;
+                case "subtasks":
+                    Subtask subtask = subtaskFromJson(inputStream);
                     if (subtask.getId() >= 0) {
                         taskManager.updateSubtask(subtask);
                     } else {
                         taskManager.createSubtask(subtask);
                     }
-                    writeResponse(exchange, "Подзадача успешно создана", 201);
-                } catch (ValidationException e) {
-                    writeResponse(exchange, "Задача пересекается с существующими", 409);
-                }
-                break;
-            case "epics":
-                Epic epic = epicFromJson(inputStream);
-
-                taskManager.createEpic(epic);
-                writeResponse(exchange, "Эпик успешно создан", 201);
-                break;
-            default:
-                writeResponse(exchange, "Неверный тип задачи", 400);
-                break;
+                    String subtaskJson = new Gson().toJson("Подзадача успешно создана");
+                    writeResponse(exchange, subtaskJson, 201);
+                    break;
+                case "epics":
+                    Epic epic = epicFromJson(inputStream);
+                    taskManager.createEpic(epic);
+                    String epicJson = new Gson().toJson("Эпик успешно создан");
+                    writeResponse(exchange, epicJson, 201);
+                    break;
+                default:
+                    writeResponse(exchange, "Неверный тип задачи", 400);
+                    break;
+            }
+        } catch (ValidationException e) {
+            writeResponse(exchange, "Ошибка валидации: " + e.getMessage(), 409);
         }
     }
 
@@ -141,12 +151,22 @@ public class HttpTaskServer implements HttpHandler {
 
     private Task taskFromJson(InputStream inputStream) throws IOException {
         String requestBody = getString(inputStream);
-        return new Gson().fromJson(requestBody, Task.class);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                .setPrettyPrinting()
+                .create();
+        return gson.fromJson(requestBody, Task.class);
     }
 
     private Subtask subtaskFromJson(InputStream inputStream) throws IOException {
         String requestBody = getString(inputStream);
-        return new Gson().fromJson(requestBody, Subtask.class);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                .setPrettyPrinting()
+                .create();
+        return gson.fromJson(requestBody, Subtask.class);
     }
 
     private Epic epicFromJson(InputStream inputStream) throws IOException {
@@ -155,33 +175,33 @@ public class HttpTaskServer implements HttpHandler {
     }
 
     public void get(String[] pathParts, HttpExchange exchange) throws IOException {
-        switch (pathParts[2]) {
+        switch (pathParts[1]) {
             case "tasks":
-                if (pathParts.length == 3) {
+                if (pathParts.length == 2) {
                     String jsonList = new Gson().toJson(taskManager.getListAllTask());
                     writeResponse(exchange, jsonList, 200);
                 } else {
-                    int id = Integer.parseInt(pathParts[3]);
+                    int id = Integer.parseInt(pathParts[2]);
                     Task task = taskManager.getTaskById(id);
                     check(task, exchange);
                 }
                 break;
             case "subtasks":
-                if (pathParts.length == 3) {
+                if (pathParts.length == 2) {
                     String jsonList = new Gson().toJson(taskManager.getListAllSubtask());
                     writeResponse(exchange, jsonList, 200);
                 } else {
-                    int id = Integer.parseInt(pathParts[3]);
+                    int id = Integer.parseInt(pathParts[2]);
                     Subtask task = taskManager.getSubtaskById(id);
                     check(task, exchange);
                 }
                 break;
             case "epics":
-                if (pathParts.length == 3) {
+                if (pathParts.length == 2) {
                     String jsonList = new Gson().toJson(taskManager.getListAllEpic());
                     writeResponse(exchange, jsonList, 200);
                 } else {
-                    int id = Integer.parseInt(pathParts[3]);
+                    int id = Integer.parseInt(pathParts[2]);
                     Epic task = taskManager.getEpicById(id);
                     check(task, exchange);
                 }
@@ -202,7 +222,12 @@ public class HttpTaskServer implements HttpHandler {
 
     private void check(Task task, HttpExchange exchange) throws IOException {
         if (task != null) {
-            String taskJson = new Gson().toJson(task);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                    .setPrettyPrinting()
+                    .create();
+            String taskJson = gson.toJson(task);
             writeResponse(exchange, taskJson, 200);
         } else {
             writeResponse(exchange, "Такой задачи нет", 404);
@@ -215,5 +240,32 @@ public class HttpTaskServer implements HttpHandler {
             os.write(responseString.getBytes());
         }
         exchange.close();
+    }
+
+    class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
+        private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
+        @Override
+        public void write(final JsonWriter jsonWriter, final LocalDateTime localDate) throws IOException {
+            jsonWriter.value(localDate.format(dtf));
+        }
+
+        @Override
+        public LocalDateTime read(final JsonReader jsonReader) throws IOException {
+            return LocalDateTime.parse(jsonReader.nextString(), dtf);
+        }
+    }
+
+    class DurationTypeAdapter extends TypeAdapter<Duration> {
+
+        @Override
+        public void write(JsonWriter out, Duration value) throws IOException {
+            out.value(value.toString());
+        }
+
+        @Override
+        public Duration read(JsonReader in) throws IOException {
+            return Duration.parse(in.nextString());
+        }
     }
 }

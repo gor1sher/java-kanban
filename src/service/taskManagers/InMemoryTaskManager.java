@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null) {
             throw new NotFoundException("Epic id = " + task.getId());
         }
-        priorityTasks.remove(task.getId());
+        priorityTasks.remove(task);
         addPriorityTask(task);
         tasks.put(task.getId(), newTask);
     }
