@@ -170,7 +170,12 @@ public class HttpTaskServer implements HttpHandler {
 
     private Epic epicFromJson(InputStream inputStream) throws IOException {
         String requestBody = getString(inputStream);
-        return new Gson().fromJson(requestBody, Epic.class);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                .setPrettyPrinting()
+                .create();
+        return gson.fromJson(requestBody, Epic.class);
     }
 
     public void get(String[] pathParts, HttpExchange exchange) throws IOException {

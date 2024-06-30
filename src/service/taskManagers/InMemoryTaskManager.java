@@ -190,6 +190,7 @@ public class InMemoryTaskManager implements TaskManager {
         return priorityTasks;
     }
 
+    @Override
     public void updateEndTimeEpic(Epic epic) {
         ArrayList<Integer> subtasksList = epic.getSubtasks();
 
@@ -198,6 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .reduce((a, b) -> a.plus(b)));
     }
 
+    @Override
     public void updateStartTimeEpic(Epic epic) {
         ArrayList<Integer> subtasksList = epic.getSubtasks();
 
@@ -206,6 +208,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .filter(a -> a != null)
                 .min(LocalDateTime::compareTo));
     }
+
 
     public void updateEpicData(Epic epic) {
         updateStartTimeEpic(epic);

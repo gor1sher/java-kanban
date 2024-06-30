@@ -45,4 +45,8 @@ public interface TaskManager {
     public ArrayList<Task> getHistoryList();
 
     public TreeSet<Task> getPrioritizedTasks();
+
+    public void updateEndTimeEpic(Epic epic);
+
+    public void updateStartTimeEpic(Epic epic);
 }
