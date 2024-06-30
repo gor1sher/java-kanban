@@ -134,33 +134,34 @@ public class HttpTaskServerTest {
 
         assertEquals(null, taskManager.getTaskById(task.getId()));
     }
-}
 
 
-class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
-    @Override
-    public void write(final JsonWriter jsonWriter, final LocalDateTime localDate) throws IOException {
-        jsonWriter.value(localDate.format(dtf));
+    static class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
+        private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
+        @Override
+        public void write(final JsonWriter jsonWriter, final LocalDateTime localDate) throws IOException {
+            jsonWriter.value(localDate.format(dtf));
+        }
+
+        @Override
+        public LocalDateTime read(final JsonReader jsonReader) throws IOException {
+            return LocalDateTime.parse(jsonReader.nextString(), dtf);
+        }
     }
 
-    @Override
-    public LocalDateTime read(final JsonReader jsonReader) throws IOException {
-        return LocalDateTime.parse(jsonReader.nextString(), dtf);
-    }
-}
+    static class DurationTypeAdapter extends TypeAdapter<Duration> {
 
-class DurationTypeAdapter extends TypeAdapter<Duration> {
+        @Override
+        public void write(JsonWriter out, Duration value) throws IOException {
+            out.value(value.toString());
+        }
 
-    @Override
-    public void write(JsonWriter out, Duration value) throws IOException {
-        out.value(value.toString());
-    }
-
-    @Override
-    public Duration read(JsonReader in) throws IOException {
-        return Duration.parse(in.nextString());
+        @Override
+        public Duration read(JsonReader in) throws IOException {
+            return Duration.parse(in.nextString());
+        }
     }
 }
 

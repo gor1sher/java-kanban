@@ -241,7 +241,7 @@ public class HttpTaskServer implements HttpHandler {
         exchange.close();
     }
 
-    class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
+    static class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
         private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
         @Override
@@ -255,7 +255,7 @@ public class HttpTaskServer implements HttpHandler {
         }
     }
 
-    class DurationTypeAdapter extends TypeAdapter<Duration> {
+    static class DurationTypeAdapter extends TypeAdapter<Duration> {
 
         @Override
         public void write(JsonWriter out, Duration value) throws IOException {
