@@ -18,7 +18,6 @@ public class HttpTaskServer implements HttpHandler {
 
     TaskManager taskManager;
 
-
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
     }
@@ -49,7 +48,6 @@ public class HttpTaskServer implements HttpHandler {
         }
     }
 
-
     public void delete(String[] pathParts, HttpExchange exchange) throws IOException {
         try {
             int id = Integer.parseInt(pathParts[3].trim());
@@ -61,7 +59,7 @@ public class HttpTaskServer implements HttpHandler {
                         return;
                     }
                     taskManager.removeTask(task.getId());
-                    writeResponse(exchange, "Задача успешно удалена", 200);
+                    writeResponse(exchange, "Задача успешно удалена", 204);
                     break;
                 case "subtasks":
                     Subtask subtask = taskManager.getSubtaskById(id);
@@ -70,7 +68,7 @@ public class HttpTaskServer implements HttpHandler {
                         return;
                     }
                     taskManager.removeSubtask(subtask.getId());
-                    writeResponse(exchange, "Подзадача успешно удалена", 200);
+                    writeResponse(exchange, "Подзадача успешно удалена", 204);
                     break;
                 case "epics":
                     Epic epic = taskManager.getEpicById(id);
@@ -79,7 +77,7 @@ public class HttpTaskServer implements HttpHandler {
                         return;
                     }
                     taskManager.removeEpic(epic.getId());
-                    writeResponse(exchange, "Эпик успешно удален", 200);
+                    writeResponse(exchange, "Эпик успешно удален", 204);
                     break;
                 default:
                     writeResponse(exchange, "Неверный тип задачи", 400);
@@ -91,7 +89,6 @@ public class HttpTaskServer implements HttpHandler {
             writeResponse(exchange, "Ошибка ввода-вывода", 500);
         }
     }
-
 
     public void post(String[] pathParts, HttpExchange exchange) throws IOException {
         InputStream inputStream = exchange.getRequestBody();
@@ -108,7 +105,7 @@ public class HttpTaskServer implements HttpHandler {
                     }
                     writeResponse(exchange, "Задача успешно создана", 201);
                 } catch (ValidationException e) {
-                    writeResponse(exchange, "Задача пересекается с существующими", 406);
+                    writeResponse(exchange, "Задача пересекается с существующими", 409);
                 }
                 break;
             case "subtasks":
@@ -120,16 +117,19 @@ public class HttpTaskServer implements HttpHandler {
                     } else {
                         taskManager.createSubtask(subtask);
                     }
-                    writeResponse(exchange, "Задача успешно создана", 201);
+                    writeResponse(exchange, "Подзадача успешно создана", 201);
                 } catch (ValidationException e) {
-                    writeResponse(exchange, "Задача пересекается с существующими", 406);
+                    writeResponse(exchange, "Задача пересекается с существующими", 409);
                 }
                 break;
             case "epics":
                 Epic epic = epicFromJson(inputStream);
 
                 taskManager.createEpic(epic);
-                writeResponse(exchange, "Задача успешно создана", 201);
+                writeResponse(exchange, "Эпик успешно создан", 201);
+                break;
+            default:
+                writeResponse(exchange, "Неверный тип задачи", 400);
                 break;
         }
     }
@@ -158,37 +158,42 @@ public class HttpTaskServer implements HttpHandler {
         switch (pathParts[2]) {
             case "tasks":
                 if (pathParts.length == 3) {
+                    String jsonList = new Gson().toJson(taskManager.getListAllTask());
+                    writeResponse(exchange, jsonList, 200);
+                } else {
                     int id = Integer.parseInt(pathParts[3]);
                     Task task = taskManager.getTaskById(id);
                     check(task, exchange);
-                } else {
-                    String jsonList = new Gson().toJson(taskManager.getListAllTask());
-                    writeResponse(exchange, jsonList, 200);
                 }
+                break;
             case "subtasks":
                 if (pathParts.length == 3) {
+                    String jsonList = new Gson().toJson(taskManager.getListAllSubtask());
+                    writeResponse(exchange, jsonList, 200);
+                } else {
                     int id = Integer.parseInt(pathParts[3]);
                     Subtask task = taskManager.getSubtaskById(id);
                     check(task, exchange);
-                } else {
-                    String jsonList = new Gson().toJson(taskManager.getListAllSubtask());
-                    writeResponse(exchange, jsonList, 200);
                 }
+                break;
             case "epics":
                 if (pathParts.length == 3) {
+                    String jsonList = new Gson().toJson(taskManager.getListAllEpic());
+                    writeResponse(exchange, jsonList, 200);
+                } else {
                     int id = Integer.parseInt(pathParts[3]);
                     Epic task = taskManager.getEpicById(id);
                     check(task, exchange);
-                } else {
-                    String jsonList = new Gson().toJson(taskManager.getListAllEpic());
-                    writeResponse(exchange, jsonList, 200);
                 }
+                break;
             case "history":
                 String jsonList = new Gson().toJson(taskManager.getHistoryList());
                 writeResponse(exchange, jsonList, 200);
+                break;
             case "prioritized":
                 String json = new Gson().toJson(taskManager.getPrioritizedTasks());
                 writeResponse(exchange, json, 200);
+                break;
             default:
                 writeResponse(exchange, "Неверный тип задачи", 400);
                 break;
@@ -205,8 +210,8 @@ public class HttpTaskServer implements HttpHandler {
     }
 
     private void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {
+        exchange.sendResponseHeaders(responseCode, responseString.getBytes().length);
         try (OutputStream os = exchange.getResponseBody()) {
-            exchange.sendResponseHeaders(responseCode, 0);
             os.write(responseString.getBytes());
         }
         exchange.close();
