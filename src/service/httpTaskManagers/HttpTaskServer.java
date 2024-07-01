@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 
 public class HttpTaskServer implements HttpHandler {
 
-    TaskManager taskManager;
+    protected TaskManager taskManager;
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
@@ -202,7 +202,12 @@ public class HttpTaskServer implements HttpHandler {
                 break;
             case "epics":
                 if (pathParts.length == 2) {
-                    String jsonList = new Gson().toJson(taskManager.getListAllEpic());
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
+                            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                            .setPrettyPrinting()
+                            .create();
+                    String jsonList = gson.toJson(taskManager.getListAllEpic());
                     writeResponse(exchange, jsonList, 200);
                 } else {
                     int id = Integer.parseInt(pathParts[2]);
