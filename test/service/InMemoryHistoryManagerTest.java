@@ -4,7 +4,10 @@ import model.Epic;
 import model.Status;
 import model.Task;
 import org.junit.jupiter.api.Test;
+import service.historyManagers.InMemoryHistoryManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,8 +18,11 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     void getHistory_returnInCorrectOrder() {
-        Epic epic = new Epic("аза1", "куув", Status.IN_PROGRESS);
-        Task task = new Task("аза2", "куув", Status.NEW);
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
+
+        Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 17, 12, 30, 0));
 
         inMemoryHistoryManager.add(1, epic);
         inMemoryHistoryManager.add(2, task);
@@ -28,9 +34,13 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     void remove_removeFromMapAndlinkedList() {
-        Epic epic = new Epic("аза1", "куув", Status.IN_PROGRESS);
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
+
+        Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 17, 12, 30, 0));
+
         epic.setId(12);
-        Task task = new Task("аза2", "куув", Status.NEW);
         task.setId(15);
 
         inMemoryHistoryManager.add(epic.getId(), epic);
@@ -50,8 +60,11 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     void add_addWithoutDoublicatsToEnd() {
-        Epic epic = new Epic("аза1", "куув", Status.IN_PROGRESS);
-        Task task = new Task("аза2", "куув", Status.NEW);
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
+
+        Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 17, 12, 30, 0));
 
         inMemoryHistoryManager.add(1, epic);
         inMemoryHistoryManager.add(2, task);

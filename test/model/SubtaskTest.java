@@ -2,18 +2,25 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SubtaskTest {
 
     @Test
-    void setId_eachOtherIfTheirIdIsEqual() {
-        Epic epic = new Epic("аза", "куув", Status.IN_PROGRESS);
-        epic.setId(12);
-        Subtask subtask = new Subtask("аза", "куув", Status.NEW, epic.getId());
-        subtask.setId(15);
-        Subtask subtask1 = new Subtask("аза", "куув", Status.NEW, epic.getId());
-        subtask1.setId(15);
-        assertTrue(subtask.equals(subtask1));
+    void setId_changesId() {
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 15, 12, 30, 0));
+
+        Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, 15,
+                Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 16, 12, 30, 0));
+
+        int newId = 15;
+        subtask.setId(newId);
+        assertEquals(newId, subtask.getId());
     }
 }

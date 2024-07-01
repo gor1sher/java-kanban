@@ -1,4 +1,4 @@
-package service;
+package service.taskManagers;
 
 import model.Epic;
 import model.Subtask;
@@ -6,8 +6,9 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
-interface TaskManager {
+public interface TaskManager {
 
     public Task createTask(Task task);
 
@@ -41,4 +42,11 @@ interface TaskManager {
 
     public ArrayList<Integer> getSubtasksByEpic(Epic specificEpic);
 
+    public ArrayList<Task> getHistoryList();
+
+    public TreeSet<Task> getPrioritizedTasks();
+
+    public void updateEndTimeEpic(Epic epic);
+
+    public void updateStartTimeEpic(Epic epic);
 }

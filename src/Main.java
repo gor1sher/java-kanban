@@ -1,39 +1,34 @@
 import model.Epic;
 import model.Status;
 import model.Subtask;
-import service.InMemoryTaskManager;
-import service.Managers;
+import model.Task;
+import service.taskManagers.saveTasks.FileBackedTaskManager;
+import service.historyManagers.InMemoryHistoryManager;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
-        Epic epic = new Epic("дом", "3 шага для постройки дома", Status.NEW);
-        inMemoryTaskManager.createEpic(epic);
-        Subtask subtask1 = new Subtask("посадить дерево", "березка", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask("выростить сына", "иван", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask2);
-        Subtask subtask3 = new Subtask("построить дом", "двухэтажный", Status.IN_PROGRESS, epic.getId());
-        inMemoryTaskManager.createSubtask(subtask3);
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(new InMemoryHistoryManager());
 
-        Epic epic1 = new Epic("машина", "купить машину", Status.NEW);
-        inMemoryTaskManager.createEpic(epic1);
+        Epic epic = new Epic("дом", "купить дом", Status.NEW, Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 28, 11, 30, 0));
 
-        inMemoryTaskManager.getSubtaskById(subtask1.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        fileBackedTaskManager.createEpic(epic);
 
-        inMemoryTaskManager.getEpicById(epic.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        Subtask subtask = new Subtask("посадить дерево", "березка", Status.NEW, epic.getId(),
+                Duration.ofMinutes(22),
+                LocalDateTime.of(2023, 3, 23, 12, 30, 0));
 
-        inMemoryTaskManager.getSubtaskById(subtask3.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        Task task = new Task("аза2", "куув", Status.NEW, Duration.ofMinutes(22),
+                        LocalDateTime.of(2023, 3, 29, 13, 30, 0));
 
-        inMemoryTaskManager.getEpicById(epic1.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        fileBackedTaskManager.createTask(task);
+        fileBackedTaskManager.createSubtask(subtask);
 
-        inMemoryTaskManager.getSubtaskById(subtask2.getId());
-        System.out.println(inMemoryTaskManager.getHistoryList());
+        System.out.println(epic.getDuration());
 
     }
 }
