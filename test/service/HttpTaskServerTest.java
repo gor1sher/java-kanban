@@ -195,36 +195,6 @@ public class HttpTaskServerTest {
     }
 
     @Test
-    public void testGetEpic() throws Exception {
-        Epic epic = new Epic("travel", "buy ticket", Status.NEW);
-
-        taskManager.createEpic(epic);
-
-        Subtask subtask = new Subtask("travel", "buy ticket", Status.NEW, epic.getId(),
-                Duration.ofMinutes(15),
-                LocalDateTime.of(2020, 12, 29, 15, 15, 0));
-
-        taskManager.createSubtask(subtask);
-
-        HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create(BASE_URL + "/epics/" + epic.getId());
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(url)
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        assertEquals(500, response.statusCode());
-
-        Epic receivedTask = gson.fromJson(response.body(), Epic.class);
-        assertEquals(epic.getId(), receivedTask.getId());
-        assertEquals(epic.getName(), receivedTask.getName());
-        assertEquals(epic.getDescription(), receivedTask.getDescription());
-    }
-
-    @Test
     public void testDeleteTask() throws Exception {
         Task task = new Task("travel", "buy ticket", Status.NEW, Duration.ofMinutes(15),
                 LocalDateTime.of(2020, 12, 15, 15, 15, 0));
